@@ -6,11 +6,8 @@ const referralSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true},
-  email: { type: String, required: true, unique: true },
-  phone: { type: String,},
   dailyIncome:  { type: Boolean, default: false },
-  walletAddress: { type: String},
+  walletAddress: { type: String, required:true},
   rechargeWallet: { type: Number, default: 0 },
   totalInvestment: { type: Number, default: 0 },
   earningWallet: { type: Number, default: 0 },

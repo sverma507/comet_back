@@ -1,29 +1,11 @@
 import { LevelIncome } from "../models/levelIncome.js";
 import { User } from "../models/user.model.js";
 import { UserRecharge } from "../models/userRecharge.model.js";
-
+import jwt from 'jsonwebtoken'
 export const InvesterSignUp = async (req, res) => {
-    const { userName, email, phone, referredBy, walletAddress } = req.body;
+    const {referredBy, walletAddress } = req.body;
     const gift = 10
     try {
-      // Check if the email already exists in the database
-      if (!userName || !email || !phone) {
-        return res.status(400).json({ message: "Fill All The Fields" });
-      }
-  
-      const existingEmail = await User.findOne({ email });
-      if (existingEmail) {
-        return res
-          .status(400)
-          .json({ message: "Email Address  already exists." });
-      }
-  
-  
-      // const existingPhone = await User.findOne({ phone });
-      // if (existingPhone) {
-      //   return res.status(400).json({ message: "Phone Number  already exists." });
-      // }
-  
       // // Check if the phone number already exists in the database
       // const existingWallet = await User.findOne({ walletAddress });
       // if (existingWallet) {
@@ -40,9 +22,6 @@ export const InvesterSignUp = async (req, res) => {
   
         // If this is the first user, no need for referredBy or preferredSide
         const newUser = new User({
-          username: userName,
-          email,
-          phone,
           bnbKombat:gift,
           walletAddress,
           referralCode: generateReferralCode(),
@@ -71,9 +50,6 @@ export const InvesterSignUp = async (req, res) => {
   
       
       const newUser = new User({
-        username: userName,
-        email,
-        phone,
         bnbKombat:gift,
         referralCode: generateReferralCode(),
         referredBy: parentUser.referralCode,
@@ -115,7 +91,7 @@ export const InvesterSignUp = async (req, res) => {
         const upline = await User.findOne({ referralCode: tempUser.referredBy });
         if (upline) {
           // upline.teamSize = Number(upline.teamSize) + 1;
-          upline.teamSize.push(newUser._id);
+          upline.teamSize.push({userId: newUser._id, level:tlevel});
           if(tlevel>=2&&tlevel<=11){
             upline.directIncome += 1;
             upline.earningWallet += 1;
@@ -210,17 +186,14 @@ export const InvesterSignUp = async (req, res) => {
       const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '10d' });
   
   
-      return res.cookie('token', token, {
-        httpOnly: true,
-        sameSite: 'strict',  // Default behavior
-        // secure: false, 
-        maxAge: 1 * 24 * 60 * 60 * 1000
-      }).json({
-        message: `Welcome back ${user.username}`,
+
+      return res.status(200).json({
         success: true,
-        user
-  
+        message: 'Login successful!',
+        user,
+        token,
       });
+      
   
   
     } catch (err) {
