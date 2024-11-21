@@ -1,5 +1,5 @@
-import { F100 } from "../models/f100Income.model";
-import { User } from "../models/user.model";
+import { F100 } from "../models/f100Income.model.js";
+import { User } from "../models/user.model.js";
 
 const f100Eligiblity = async (user) => {
   // Check if the user has an activationDate and it's within the last 7 days

@@ -1,5 +1,5 @@
-import { MagicIncome } from "../models/magicIncome";
-import { User } from "../models/user.model";
+import { MagicIncome } from "../models/magicIncome.js";
+import { User } from "../models/user.model.js";
 
 
 const magicIncomeDistribution = async (user) => {

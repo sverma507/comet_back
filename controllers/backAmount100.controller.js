@@ -1,5 +1,5 @@
-import { BackAmount } from "../models/backAmount";
-import { User } from "../models/user.model";
+import { BackAmount } from "../models/backAmount.js";
+import { User } from "../models/user.model.js";
 
 // Function to check eligibility for backAmount100Percent and calculate the achieved percentage
 const backAmount100Eligiblity = async (user) => {
@@ -57,7 +57,7 @@ export const backAmount100 = async (req, res) => {
 
 
 
-import { User } from "../models/user.model";
+// import { User } from "../models/user.model";
 
 // Function to distribute backAmount100 across 100 days
 const backAmount100UserDistribution = async (user) => {

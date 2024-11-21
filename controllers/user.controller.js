@@ -7,12 +7,12 @@ export const InvesterSignUp = async (req, res) => {
     const gift = 10
     try {
       // // Check if the phone number already exists in the database
-      // const existingWallet = await User.findOne({ walletAddress });
-      // if (existingWallet) {
-      //   return res
-      //     .status(400)
-      //     .json({ message: "Wallet Address  already exists." });
-      // }
+      const existingWallet = await User.findOne({ walletAddress });
+      if (existingWallet) {
+        return res
+          .status(400)
+          .json({ message: "Wallet Address  already exists." });
+      }
   
       // 1. Check if this is the first user (no users in the system)
       const userCount = await User.countDocuments();
