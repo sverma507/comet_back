@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
 const corsOptions = {
-    origin: ["https://bnbkombat.live", "http://localhost:3000"],
+    origin: ["https://bnbkombat.live", "http://localhost:3000","http://localhost:3001"],
     credentials: true
 };
 
