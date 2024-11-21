@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   earningWallet: { type: Number, default: 0 },
   isActive: { type: Boolean, default: false },
   teamBusiness:{type:Number, default: 0},
-  teamSize: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  teamSize: [{ userId:{type: mongoose.Schema.Types.ObjectId, ref: 'User'}, level: { type: Number, default: 0 } }],
   referralCode: { type: String, unique: true },
   bnbKombat: { type: Number, default: 0 },
   referredBy: { type: String },

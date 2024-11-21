@@ -13,7 +13,7 @@ export const InvesterSignUp = async (req, res) => {
           .status(400)
           .json({ message: "Wallet Address  already exists." });
       }
-  
+
       // 1. Check if this is the first user (no users in the system)
       const userCount = await User.countDocuments();
     
@@ -41,11 +41,7 @@ export const InvesterSignUp = async (req, res) => {
         parentUser = await User.findOne({ referralCode: referredBy });
         if (!parentUser) {
           return res.status(400).json({ message: "Invalid referral code." });
-        } else {
-  
-          await updateCappingForReferrer(parentUser);
-  
-        }
+        } 
       }
   
       
@@ -86,7 +82,7 @@ export const InvesterSignUp = async (req, res) => {
       await parentUser.save();
       console.log("newUSER===>",newUser)
       let tempUser=newUser;
-      let tlevel=2;
+      let tlevel=1;
       while(tempUser.referredBy){
         const upline = await User.findOne({ referralCode: tempUser.referredBy });
         if (upline) {
@@ -120,7 +116,7 @@ export const InvesterSignUp = async (req, res) => {
         .status(500)
         .json({ message: "Server error", error: error.message });
     }
-  };
+};
   
   
   const generateReferralCode = () => {
