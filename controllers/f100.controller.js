@@ -1,5 +1,5 @@
-import { F100 } from "../models/f100Income.model";
-import { User } from "../models/user.model";
+import { F100 } from "../models/f100Income.model.js";
+import { User } from "../models/user.model.js";
 
 const f100Eligiblity = async (user) => {
   // Check if the user has an activationDate and it's within the last 7 days
@@ -44,7 +44,21 @@ const f100UserDistribution = async (user)=>{
 }
 
 
+export const getAllF00IncomeHistory = async(req,res) =>{
+  try {
+    const {userId} = req.params;
+    const history = await F100.findById(userId).sort({ createdAt: -1 });
 
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
 
 
 export const f100Distribute = async (req, res) => {

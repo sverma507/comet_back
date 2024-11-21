@@ -1,4 +1,5 @@
-import { User } from "../models/user.model";
+import { MagicIncome } from "../models/magicIncome.js";
+import { User } from "../models/user.model.js";
 
 
 const magicIncomeDistribution = async (user) => {
@@ -13,10 +14,8 @@ const magicIncomeDistribution = async (user) => {
       const percentages = [0, 5, 10, 15]; // First 4 percentages
       const remainingPercentage = 20; // For remaining users after the first 4
   
-      let totalMagicIncome = 0;
-  
       // Loop through the sorted direct users
-      directUsers.forEach((directUser, index) => {
+      directUsers.forEach(async(directUser, index) => {
         let percentage;
   
         // Determine the percentage based on the index
@@ -30,17 +29,41 @@ const magicIncomeDistribution = async (user) => {
         const incomeFromDirectUser = (directUser.teamBusiness * percentage) / 100;
   
         // Add this income to the total magic income
-        totalMagicIncome += incomeFromDirectUser;
-      });
+        // totalMagicIncome += incomeFromDirectUser;
+        user.earningWallet += incomeFromDirectUser;
+        await user.save(); // Save the updated user document
+
+         const newMagicIncomeHistory = new MagicIncome({
+           userId:user._id,
+           from: directUser.referralCode,
+           business : directUser.teamBusiness,
+           amount : incomeFromDirectUser
+      })
+         await newMagicIncomeHistory.save();
   
-      // Add the calculated magic income to the user's earningWallet
-      user.earningWallet += totalMagicIncome;
-      await user.save(); // Save the updated user document
+      });
     } catch (error) {
       console.error("Error in magicIncomeDistribution:", error);
     }
   };
   
+
+  export const getAllMagicIncomeHistory = async(req,res) =>{
+    try {
+      const {userId} = req.params;
+      const history = await MagicIncome.findById(userId).sort({ createdAt: -1 });
+  
+      res.status(200).json({
+        success: true,
+        message: 'History fetched.',
+        data: history,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+    }
+  }
+
 
 
 // Function to handle the backAmount100 distribution logic
