@@ -40,11 +40,7 @@ export const InvesterSignUp = async (req, res) => {
         parentUser = await User.findOne({ referralCode: referredBy });
         if (!parentUser) {
           return res.status(400).json({ message: "Invalid referral code." });
-        } else {
-  
-          await updateCappingForReferrer(parentUser);
-  
-        }
+        } 
       }
   
       
