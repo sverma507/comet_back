@@ -1,3 +1,4 @@
+import { LevelIncome } from "../models/levelIncome.js";
 import { User } from "../models/user.model.js";
 import { UserRecharge } from "../models/userRecharge.model.js";
 
@@ -90,8 +91,18 @@ export const InvesterSignUp = async (req, res) => {
         parentUser.directIncome +=10;
         parentUser.earningWallet +=10;
 
+        const newLevelIncomeHistory = new LevelIncome({
+          userId:parentUser._id,
+          from: newUser.referralCode,
+          level : 1,
+          amount : 10
+     })
+        await newLevelIncomeHistory.save();
         // Save the updated parent user document
         await parentUser.save();
+
+       
+
         console.log(`New user added to directTeam of parent user with ID: ${parentUser}`);
       } else {
         console.log("User is already a member of the direct team.");
@@ -106,8 +117,16 @@ export const InvesterSignUp = async (req, res) => {
           // upline.teamSize = Number(upline.teamSize) + 1;
           upline.teamSize.push(newUser._id);
           if(tlevel>=2&&tlevel<=11){
-            upline.directIncome +=1;
-            upline.earningWallet +=1;
+            upline.directIncome += 1;
+            upline.earningWallet += 1;
+
+            const newLevelUplineIncomeHistory = new LevelIncome({
+              userId:upline._id,
+              from: newUser.referralCode,
+              level : tlevel,
+              amount : 1
+         })
+            await newLevelUplineIncomeHistory.save();
           }
 
           await upline.save()
@@ -130,8 +149,27 @@ export const InvesterSignUp = async (req, res) => {
   
   const generateReferralCode = () => {
     const randomNumber = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit number
-    return `DZ${randomNumber}`;
+    return `BKT${randomNumber}`;
   };
+
+
+
+
+  export const getAllLevelIncomeHistory = async(req,res) =>{
+    try {
+      const {userId} = req.params;
+      const history = await LevelIncome.findById(userId).sort({ createdAt: -1 });
+  
+      res.status(200).json({
+        success: true,
+        message: 'History fetched.',
+        data: history,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+    }
+  }
   
   
   
@@ -169,7 +207,7 @@ export const InvesterSignUp = async (req, res) => {
       // }
   
       // Generate JWT token
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '10d' });
   
   
       return res.cookie('token', token, {

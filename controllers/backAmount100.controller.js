@@ -1,3 +1,4 @@
+import { BackAmount } from "../models/backAmount";
 import { User } from "../models/user.model";
 
 // Function to check eligibility for backAmount100Percent and calculate the achieved percentage
@@ -34,6 +35,8 @@ const backAmount100Eligiblity = async (user) => {
   user.backAmount100Percent = backAmountAchievedPercent === 100; // Set backAmount100Percent to true if it's 100%
 
   await user.save(); // Save the updated user document
+
+
 };
 
 // Function to handle the backAmount100 logic
@@ -77,6 +80,14 @@ if(user.backAmountReceivedPercent<=100){
   user.backAmountReceivedPercent += 1;
   // Save the updated user document
   await user.save();
+  
+  const newBackAmountIncomeHistory = new BackAmount({
+    userId : user._id,
+    rechargeWallet : user.rechargeWallet,
+    amount : dailyDistributionAmount
+  }) 
+
+  await newBackAmountIncomeHistory.save();
 
 }else{
 
@@ -86,6 +97,27 @@ if(user.backAmountReceivedPercent<=100){
     await user.save();
 }
 };
+
+
+// get all back amount history
+
+export const getAllBackAmountHistory = async(req,res) =>{
+  try {
+    const {userId} = req.params;
+    const history = await BackAmount.findById(userId).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
+
+
 
 // Function to handle the backAmount100 distribution logic
 export const backAmount100Distribution = async (req, res) => {

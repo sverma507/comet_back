@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.routes.js";
+import incomesRoute from "./routes/incomes.routes.js";
 import jwt from "jsonwebtoken";
 import path from "path";
 import axios from "axios";
@@ -27,6 +28,7 @@ app.options("*", cors(corsOptions));
 
 // API Routes
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/all-incomes", incomesRoute);
 app.get('/api/v1/user/verify-token', (req, res) => {
     const token = req.cookies.token;
     if (!token) {

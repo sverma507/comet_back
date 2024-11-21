@@ -44,7 +44,21 @@ const f100UserDistribution = async (user)=>{
 }
 
 
+export const getAllF00IncomeHistory = async(req,res) =>{
+  try {
+    const {userId} = req.params;
+    const history = await F100.findById(userId).sort({ createdAt: -1 });
 
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
 
 
 export const f100Distribute = async (req, res) => {
