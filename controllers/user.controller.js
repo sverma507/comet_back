@@ -116,7 +116,7 @@ export const InvesterSignUp = async (req, res) => {
         .status(500)
         .json({ message: "Server error", error: error.message });
     }
-  };
+};
   
   
   const generateReferralCode = () => {
