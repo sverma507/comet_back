@@ -29,19 +29,6 @@ app.options("*", cors(corsOptions));
 // API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/all-incomes", incomesRoute);
-app.get('/api/v1/user/verify-token', (req, res) => {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.json({ success: false });
-    }
-  
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-      if (err) {
-        return res.json({ success: false });
-      }
-      res.json({ success: true, user: decoded });
-    });
-  });
 
 app.listen(PORT, () => {
     connectDB();

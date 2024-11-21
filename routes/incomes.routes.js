@@ -3,11 +3,12 @@ import { getAllBackAmountHistory } from "../controllers/backAmount100.controller
 import { getAllF00IncomeHistory } from "../controllers/f100.controller.js";
 import { getAllMagicIncomeHistory } from "../controllers/magicIncome.controller.js";
 import { getAllLevelIncomeHistory } from "../controllers/user.controller.js";
+import { protect } from "../middlewares/auth.js";
 const router = express.Router();
 
-router.route('/back-amount/:userId').get(getAllBackAmountHistory);
-router.route('/f100/:userId').get(getAllF00IncomeHistory);
-router.route('/magic/:userId').get(getAllMagicIncomeHistory);
-router.route('/level/:userId').get(getAllLevelIncomeHistory);
+router.route('/back-amount/:userId').get(protect,getAllBackAmountHistory);
+router.route('/f100/:userId').get(protect,getAllF00IncomeHistory);
+router.route('/magic/:userId').get(protect,getAllMagicIncomeHistory);
+router.route('/level/:userId').get(protect,getAllLevelIncomeHistory);
 
 export default router;
