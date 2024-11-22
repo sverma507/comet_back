@@ -6,6 +6,9 @@ import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.routes.js";
 import incomesRoute from "./routes/incomes.routes.js";
 import adminRoute from "./routes/admin.route.js";
+import f100Route from "./routes/f100.route.js"
+import backamountRoute from "./routes/backAmount100.route.js"
+
 import jwt from "jsonwebtoken";
 import path from "path";
 import axios from "axios";
@@ -30,6 +33,8 @@ app.options("*", cors(corsOptions));
 // API Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/admin", adminRoute);
+app.use("/api/v1/f100", f100Route);
+app.use("/api/v1/backamount", backamountRoute);
 app.use("/api/v1/all-incomes", incomesRoute);
 
 app.listen(PORT, () => {

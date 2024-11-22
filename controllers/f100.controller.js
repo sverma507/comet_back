@@ -7,6 +7,7 @@ const f100Eligiblity = async (user) => {
   const sevenDaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 7));
 
   if (user.activationDate && new Date(user.activationDate) >= sevenDaysAgo) {
+    console.log("CALLLLLLLEDDDDD")
     // If directBussiness is 2x the rechargeWallet, set dailyIncome to true
     if (user.directBussiness >= 2 * user.rechargeWallet) {
       user.dailyIncome = true;
@@ -30,7 +31,8 @@ export const f100 = async (req, res) => {
 
 
 const f100UserDistribution = async (user)=>{
-    user.earningWallet = 0.0333*rechargeWallet
+    user.earningWallet += 0.0333*user.rechargeWallet
+    const amount = 0.0333*user.rechargeWallet;
     await user.save();
 
     const newF100IncomeHistory = new F100({
