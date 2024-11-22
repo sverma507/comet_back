@@ -60,6 +60,7 @@ export const activateUser = async (req, res) => {
       
        // Update the recharge wallet amount
        user.isActive = true;
+      //  user.teamBusiness = Number(user.teamBusiness) + Number(amount);
        user.activationDate=new Date();
        user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
        user.totalInvestment += Number(amount);
