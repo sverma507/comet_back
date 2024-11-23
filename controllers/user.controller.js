@@ -32,7 +32,7 @@ export const InvesterSignUp = async (req, res) => {
         await newUser.save();
 
         const newLevelUplineIncomeHistory = new LevelIncome({
-          userId:existingWallet._id,
+          userId:newUser._id,
           from: "Self",
           level : 0,
           amount : gift
