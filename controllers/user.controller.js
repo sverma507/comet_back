@@ -151,6 +151,7 @@ export const InvesterSignUp = async (req, res) => {
   export const userRecharge = async(req,res) =>{
     console.log("userActivation called")
     const { referralCode , amount } = req.params;
+    const {deductbnbKombat} = req.body;
   
     // Validation check for amount
     // if (!amount || isNaN(amount) || amount <= 0) {
@@ -165,14 +166,14 @@ export const InvesterSignUp = async (req, res) => {
       }
   
       // Condition for first recharge
-      if (user.rechargeWallet === 0) {
-        if (amount < 25 || amount % 25 !== 0) {
-          return res.status(400).json({
-            success: false,
-            message: 'First recharge must be a multiple of 25 and not less than 25.',
-          });
-        }
-      }
+      // if (user.rechargeWallet === 0) {
+      //   if (amount < 25 || amount % 25 !== 0) {
+      //     return res.status(400).json({
+      //       success: false,
+      //       message: 'First recharge must be a multiple of 25 and not less than 25.',
+      //     });
+      //   }
+      // }
 
       
      
@@ -182,7 +183,8 @@ export const InvesterSignUp = async (req, res) => {
       user.activationDate=new Date();
       user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
       user.totalInvestment += Number(amount);
-      user.bnbKombat += Number(10);
+      user.bnbKombat -=deductbnbKombat
+      // user.bnbKombat += Number(10);
       await user.save();
 
 
@@ -193,8 +195,8 @@ export const InvesterSignUp = async (req, res) => {
           upline.teamBusiness = Number(upline.teamBusiness) + Number(amount);
           await upline.save()
           tempUser = upline;
-        }
-        }
+        }
+        }
   
   
       // If user has a referrer, add a bonus to the referrer's earning wallet
@@ -227,9 +229,12 @@ export const InvesterSignUp = async (req, res) => {
         success: true,
         message: 'Recharge successful.',
         data: user,
+        message: 'Recharge successful.',
+        data: user,
       });
     } catch (error) {
       console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during recharge process.' });
       res.status(500).json({ success: false, message: 'Server error during recharge process.' });
     }
   }
