@@ -166,14 +166,14 @@ export const InvesterSignUp = async (req, res) => {
       }
   
       // Condition for first recharge
-      if (user.rechargeWallet === 0) {
-        if (amount < 25 || amount % 25 !== 0) {
-          return res.status(400).json({
-            success: false,
-            message: 'First recharge must be a multiple of 25 and not less than 25.',
-          });
-        }
-      }
+      // if (user.rechargeWallet === 0) {
+      //   if (amount < 25 || amount % 25 !== 0) {
+      //     return res.status(400).json({
+      //       success: false,
+      //       message: 'First recharge must be a multiple of 25 and not less than 25.',
+      //     });
+      //   }
+      // }
 
       
      
@@ -184,7 +184,7 @@ export const InvesterSignUp = async (req, res) => {
       user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
       user.totalInvestment += Number(amount);
       user.bnbKombat -=deductbnbKombat
-      user.bnbKombat += Number(10);
+      // user.bnbKombat += Number(10);
       await user.save();
 
 
