@@ -8,7 +8,7 @@ const backAmount100Eligiblity = async (user) => {
     const directUser = await User.findById(directUserId);
 
     // Check if directBussiness is at least 2x of rechargeWallet
-    if (directUser.directBussiness < 2 * directUser.rechargeWallet) {
+    if (directUser.directBussiness <  directUser.rechargeWallet) {
       return; // If any direct team member doesn't meet the condition, exit the function
     }
   }
