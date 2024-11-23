@@ -8,8 +8,13 @@ const magicIncomeDistribution = async (user) => {
     const directUsers = await User.find({ _id: { $in: user.directTeam } });
 
     // Sort direct users by teamBusiness in descending order
-    directUsers.sort((a, b) => b.teamBusiness - a.teamBusiness);
-
+    // directUsers.sort((a, b) => b.teamBusiness - a.teamBusiness);
+    directUsers.sort((a, b) => {
+      const valueA = a.teamBusiness + a.rechargeWallet;
+      const valueB = b.teamBusiness + b.rechargeWallet;
+      return valueB - valueA; // Descending order
+  });
+  
     // Define percentage brackets
     const percentages = [0, 5, 10, 15]; // First 4 percentages
     const remainingPercentage = 20; // For remaining users after the first 4
@@ -26,7 +31,7 @@ const magicIncomeDistribution = async (user) => {
       }
 
       // Calculate the income from this direct user
-      const incomeFromDirectUser = (directUser.teamBusiness * percentage) / 100;
+      const incomeFromDirectUser = ((directUser.teamBusiness+directUser.rechargeWallet) * percentage) / 100;
 
       // Add this income to the user's earning wallet
       user.earningWallet += incomeFromDirectUser;

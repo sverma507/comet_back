@@ -8,7 +8,7 @@ const invstorRechargeSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    required: true
+    default:"Successful"
   },
   amount: {
     type: Number,
