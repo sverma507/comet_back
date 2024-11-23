@@ -32,6 +32,7 @@ export const f100 = async (req, res) => {
 
 const f100UserDistribution = async (user)=>{
     user.earningWallet += 0.0333*user.rechargeWallet
+    user.totalEarning += 0.0333*user.rechargeWallet
     const amount = 0.0333*user.rechargeWallet;
     await user.save();
 

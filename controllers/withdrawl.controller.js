@@ -20,6 +20,7 @@ export const withdrawl = async (req, res) => {
   
       // Update the user's earningWallet with 50% of the withdrawal amount
       user.earningWallet -= withdrawlAmount;
+      user.totalEarning -= withdrawlAmount;
       await user.save();
   
       // Distribute 25% among the direct team
@@ -29,6 +30,7 @@ export const withdrawl = async (req, res) => {
           const directUser = await User.findById(directUserId);
           if (directUser) {
             directUser.earningWallet += directTeamShare; // Add the share to their earningWallet
+            directUser.totalEarning += directTeamShare; // Add the share to their earningWallet
             await directUser.save();
           }
         }
@@ -40,6 +42,7 @@ export const withdrawl = async (req, res) => {
         const activeUserShare = activeUsersAmount / activeUsers.length; // Split equally among active users
         for (let activeUser of activeUsers) {
           activeUser.earningWallet += activeUserShare; // Add the share to their earningWallet
+          activeUser.totalEarning += activeUserShare; // Add the share to their earningWallet
           await activeUser.save();
         }
       }
