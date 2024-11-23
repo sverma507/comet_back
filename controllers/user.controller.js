@@ -44,7 +44,7 @@ export const InvesterSignUp = async (req, res) => {
         } 
       }
   
-      
+
       const newUser = new User({
         bnbKombat:gift,
         referralCode: generateReferralCode(),
@@ -61,7 +61,7 @@ export const InvesterSignUp = async (req, res) => {
         // Add new user ID to the directTeam array
         parentUser.directTeam.push(newUser._id);
         parentUser.directIncome +=10;
-        parentUser.earningWallet +=10;
+        parentUser.bnbKombat +=10;
 
         const newLevelIncomeHistory = new LevelIncome({
           userId:parentUser._id,
@@ -90,7 +90,7 @@ export const InvesterSignUp = async (req, res) => {
           upline.teamSize.push({userId: newUser._id, level:tlevel});
           if(tlevel>=2&&tlevel<=11){
             upline.directIncome += 1;
-            upline.earningWallet += 1;
+            upline.bnbKombat += 1;
 
             const newLevelUplineIncomeHistory = new LevelIncome({
               userId:upline._id,

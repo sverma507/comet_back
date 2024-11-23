@@ -55,13 +55,41 @@ export const activateUser = async (req, res) => {
            });
          }
        }
-   
+
+       
+      
        // Update the recharge wallet amount
        user.isActive = true;
+      //  user.teamBusiness = Number(user.teamBusiness) + Number(amount);
+       user.activationDate=new Date();
        user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
        user.totalInvestment += Number(amount);
-       user.bnbKombat += Number(amount);
+       user.bnbKombat += Number(10);
        await user.save();
+
+
+       let tempUser=user;
+       while(tempUser.referredBy){
+         let upline = await User.findOne({ referralCode: tempUser.referredBy });
+         if (upline) {
+           upline.teamBusiness = Number(upline.teamBusiness) + Number(amount);
+           await upline.save()
+           tempUser = upline;
+         }
+         }
+   
+   
+       // If user has a referrer, add a bonus to the referrer's earning wallet
+       if (user.referredBy) {
+         const upline = await User.findOne({ referralCode: user.referredBy }); // Added await here
+         if (upline) {
+           upline.directBussiness = Number(upline.directBussiness) + Number(amount);
+           await upline.save();
+   
+         
+         }
+       }
+    
 
        // If user has a referrer, add a bonus to the referrer's earning wallet
       
