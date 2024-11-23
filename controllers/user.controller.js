@@ -30,6 +30,15 @@ export const InvesterSignUp = async (req, res) => {
         });
   
         await newUser.save();
+
+        const newLevelUplineIncomeHistory = new LevelIncome({
+          userId:existingWallet._id,
+          from: "Self",
+          level : 0,
+          amount : gift
+     })
+        await newLevelUplineIncomeHistory.save();
+        
         return res
           .status(201)
           .json({ message: "First user successfully created!", User: newUser });
@@ -54,6 +63,14 @@ export const InvesterSignUp = async (req, res) => {
       });
   
       await newUser.save();
+
+      const newLevelUplineIncomeHistory = new LevelIncome({
+        userId:newUser._id,
+        from: "Self",
+        level : 0,
+        amount : gift
+   })
+      await newLevelUplineIncomeHistory.save();
   
       const temp = await User.findOne({ walletAddress })
       parentUser.referrals.push({ userId: temp._id, registrationDate: new Date() });
