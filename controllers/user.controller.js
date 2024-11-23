@@ -229,9 +229,12 @@ export const InvesterSignUp = async (req, res) => {
         success: true,
         message: 'Recharge successful.',
         data: user,
+        message: 'Recharge successful.',
+        data: user,
       });
     } catch (error) {
       console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during recharge process.' });
       res.status(500).json({ success: false, message: 'Server error during recharge process.' });
     }
   }
