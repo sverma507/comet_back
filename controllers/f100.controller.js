@@ -47,7 +47,9 @@ const f100UserDistribution = async (user)=>{
 export const getAllF00IncomeHistory = async(req,res) =>{
   try {
     const {userId} = req.params;
-    const history = await F100.findById(userId).sort({ createdAt: -1 });
+    // console.log('...................',userId);
+    
+    const history = await F100.find({userId:userId}).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,

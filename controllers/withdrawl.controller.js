@@ -19,7 +19,7 @@ export const withdrawl = async (req, res) => {
       }
   
       // Update the user's earningWallet with 50% of the withdrawal amount
-      user.earningWallet += withdrawlAmount;
+      user.earningWallet -= withdrawlAmount;
       await user.save();
   
       // Distribute 25% among the direct team

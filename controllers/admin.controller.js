@@ -90,7 +90,25 @@ export const activateUser = async (req, res) => {
    };
    
 
-
+   export const getUserActivationHistory = async(req,res) =>{
+    try {
+      const {userId} = req.params;
+      console.log("idddddddddddddddddd",userId);
+      
+      const history = await ActivationHistory.find({userId:userId}).sort({ createdAt: -1 });
+  
+      res.status(200).json({
+        success: true,
+        message: 'History fetched.',
+        data: history,
+      });
+      console.log("hst=========================>",history);
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+    }
+  }
 
 
    export const activationHistory = async (req, res) => {

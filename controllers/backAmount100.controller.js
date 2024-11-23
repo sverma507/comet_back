@@ -104,8 +104,8 @@ if(user.backAmountReceivedPercent<=100){
 export const getAllBackAmountHistory = async(req,res) =>{
   try {
     const {userId} = req.params;
-    const history = await BackAmount.findById(userId).sort({ createdAt: -1 });
-
+    const history = await BackAmount.find({userId:userId}).sort({ createdAt: -1 });
+    
     res.status(200).json({
       success: true,
       message: 'History fetched.',

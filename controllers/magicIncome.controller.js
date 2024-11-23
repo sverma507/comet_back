@@ -51,7 +51,7 @@ const magicIncomeDistribution = async (user) => {
   export const getAllMagicIncomeHistory = async(req,res) =>{
     try {
       const {userId} = req.params;
-      const history = await MagicIncome.findById(userId).sort({ createdAt: -1 });
+      const history = await MagicIncome.find({userId:userId}).sort({ createdAt: -1 });
   
       res.status(200).json({
         success: true,

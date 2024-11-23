@@ -130,7 +130,7 @@ export const InvesterSignUp = async (req, res) => {
   export const getAllLevelIncomeHistory = async(req,res) =>{
     try {
       const {userId} = req.params;
-      const history = await LevelIncome.findById(userId).sort({ createdAt: -1 });
+      const history = await LevelIncome.find({userId:userId}).sort({ createdAt: -1 });
   
       res.status(200).json({
         success: true,
@@ -303,3 +303,59 @@ export const InvesterSignUp = async (req, res) => {
 
 
 
+
+
+
+
+
+
+
+
+  export const myTeamMembers = async (req, res) => {
+    // console.log("hellllllllllllllllllllllooooooooooooo")
+    const { id, level } = req.params;
+    // console.log("level==>",level)
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      // Fetch users at the specified level
+      const levelUsers = await getUsersAtLevel(user.referralCode, parseInt(level));
+      res.status(200).json(levelUsers);
+    } catch (err) {
+      console.error('Error fetching team members:', err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  
+  // Helper function to get users at a specific level
+  const getUsersAtLevel = async (referralCode, level) => {
+    let currentLevelUsers = [];
+    let previousLevelReferralCodes = [referralCode]; // Start with the initial referral code
+  
+    for (let i = 1; i <= level; i++) {
+      if (i === 1) {
+        // For level 1, get direct referrals from the user's 'referrals' array
+        const user = await User.findOne({ referralCode }).populate('referrals.userId');
+        currentLevelUsers = user.referrals
+          .map(ref => ref.userId)
+          .filter(ref => ref); // Get valid referred users
+      } else {
+        // For subsequent levels, get referrals of users from the previous level
+        console.log("entered")
+        currentLevelUsers = await User.find({ referredBy: { $in: previousLevelReferralCodes } });
+      }
+  
+      // Update previousLevelReferralCodes for the next iteration
+      previousLevelReferralCodes = currentLevelUsers.map(user => user.referralCode);
+      // console.log("previousLevelReferralCodes=>",previousLevelReferralCodes)
+      // If we are at the current level, return the users
+      if (i === level) {
+        return currentLevelUsers;
+      }
+    }
+  
+    return [];
+  };
