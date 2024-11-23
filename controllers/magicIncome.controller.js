@@ -35,6 +35,7 @@ const magicIncomeDistribution = async (user) => {
 
       // Add this income to the user's earning wallet
       user.earningWallet += incomeFromDirectUser;
+      user.totalEarning += incomeFromDirectUser;
 
       // Save the updated user document
       await user.save();

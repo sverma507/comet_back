@@ -77,6 +77,7 @@ if(user.backAmountReceivedPercent<=100){
 
   // Update the user's earningWallet
   user.earningWallet += dailyDistributionAmount;
+  user.totalEarning += dailyDistributionAmount;
   user.backAmountReceivedPercent += 1;
   // Save the updated user document
   await user.save();
