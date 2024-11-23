@@ -85,8 +85,6 @@ export const activateUser = async (req, res) => {
          if (upline) {
            upline.directBussiness = Number(upline.directBussiness) + Number(amount);
            await upline.save();
-   
-         
          }
        }
     
