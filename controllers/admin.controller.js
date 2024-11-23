@@ -1,5 +1,64 @@
 import { ActivationHistory } from "../models/activationHistory.model.js";
+import { AdminCrediential } from "../models/admin.model.js";
 import { User } from "../models/user.model.js";
+import jwt from 'jsonwebtoken'
+
+
+
+
+export const adminLogin = async (req, res) => {
+
+  try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+          return res.status(401).json({
+              message: "Something is missing, please check!",
+              success: false,
+          });
+      }
+      let user = await AdminCrediential.findOne({ email });
+      if (!user) {
+          return res.status(401).json({
+              message: "Incorrect email or password",
+              success: false,
+          });
+      }
+      // const isPasswordMatch = await bcrypt.compare(password, user.password);
+      const isPasswordMatch = password === user.password ?true : false
+      if (!isPasswordMatch) {
+          return res.status(401).json({
+              message: "Incorrect email or password",
+              success: false,
+          });
+      };
+      
+      const token =  jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '10d' });
+      
+      console.log("login token==>",token)
+      // populate each post if in the posts array
+  
+      user = {_id: user._id,email: user.email,token}
+
+      console.log("before token set login token ==>",token)
+
+      return res.cookie('token', token, {
+          httpOnly: true,  
+          sameSite: 'strict',  // Default behavior
+          // secure: false, 
+          maxAge: 1 * 24 * 60 * 60 * 1000 }).json({
+          message: `Welcome back ${user.username}`,
+          success: true,
+          user
+          
+      });
+
+  } catch (error) {
+      console.log(error);
+  }
+};
+
+
+
 
 export const getAllUsers = async (req, res) => {
   try {
