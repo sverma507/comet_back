@@ -1,3 +1,4 @@
+import { ActivationHistory } from "../models/activationHistory.model.js";
 import { LevelIncome } from "../models/levelIncome.js";
 import { User } from "../models/user.model.js";
 import { UserRecharge } from "../models/userRecharge.model.js";
@@ -142,10 +143,60 @@ export const InvesterSignUp = async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error during fetching history.' });
     }
   }
+
+
+
+
+
+  export const userRecharge = async(req,res) =>{
+    try {
+      const {userId,amount} = req.params;
+      const user = await User.findById(userId);
+
+      const newRecharge = new ActivationHistory({
+         referralCode: user.referralCode,
+         userId:user._id,
+         activatedBy: "User", 
+         amount
+      }) 
+      
+      await newRecharge.save();
+      res.status(200).json({
+        success: true,
+        message: 'Recharge Successful.',
+      });
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+    }
+  }
   
   
   
+  export const getUserRechargeHistory = async (req, res) => {
+    try {
+      const { userId } = req.params;
   
+      // Fetch magic income history for the user
+      const history = await ActivationHistory.find({ userId }).sort({ createdAt: -1 });
+  
+      res.status(200).json({
+        success: true,
+        message: "History fetched.",
+        data: history,
+      });
+    } catch (error) {
+      console.error("Error fetching magic income history:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Server error during fetching history." });
+    }
+  };
+
+
+
+
   
   export const Investerlogin = async (req, res) => {
     console.log("Login request data:", req.body);
