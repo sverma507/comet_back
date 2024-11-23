@@ -39,14 +39,17 @@ const magicIncomeDistribution = async (user) => {
       // Save the updated user document
       await user.save();
 
-      // Save magic income history
-      const newMagicIncomeHistory = new MagicIncome({
+     if(incomeFromDirectUser>0){
+       // Save magic income history
+       const newMagicIncomeHistory = new MagicIncome({
         userId: user._id,
         from: directUser.referralCode,
         business: directUser.teamBusiness,
         amount: incomeFromDirectUser,
       });
       await newMagicIncomeHistory.save();
+
+     }
     }
   } catch (error) {
     console.error("Error in magicIncomeDistribution:", error);
