@@ -97,6 +97,7 @@ export const activateUser = async (req, res) => {
        const newActivation = new ActivationHistory({
          referralCode,
          userId:user._id,
+         activatedBy: "Admin", 
          amount
        });
  

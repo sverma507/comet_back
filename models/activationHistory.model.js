@@ -13,6 +13,10 @@ const activationHistorySchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: true
+  },
+  activatedBy : {
+    type: String,
+    required: true
   }
 }, { timestamps: true }); // This will automatically add `createdAt` and `updatedAt` fields
 
