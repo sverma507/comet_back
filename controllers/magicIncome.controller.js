@@ -45,7 +45,7 @@ const magicIncomeDistribution = async (user) => {
        const newMagicIncomeHistory = new MagicIncome({
         userId: user._id,
         from: directUser.referralCode,
-        business: directUser.teamBusiness,
+        business: (directUser.teamBusiness+directUser.rechargeWallet),
         amount: incomeFromDirectUser,
       });
       await newMagicIncomeHistory.save();

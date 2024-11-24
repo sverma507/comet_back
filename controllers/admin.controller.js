@@ -127,7 +127,6 @@ export const activateUser = async (req, res) => {
        user.activationDate=new Date();
        user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
        user.totalInvestment += Number(amount);
-       user.bnbKombat += Number(10);
        await user.save();
 
 

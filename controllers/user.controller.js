@@ -35,7 +35,7 @@ export const InvesterSignUp = async (req, res) => {
         await newUser.save();
 
         const newLevelUplineIncomeHistory = new LevelIncome({
-          userId:existingWallet._id,
+          userId:newUser._id,
           from: "Self",
           level : 0,
           amount : gift
@@ -202,7 +202,7 @@ export const InvesterSignUp = async (req, res) => {
      //  user.teamBusiness = Number(user.teamBusiness) + Number(amount);
       user.activationDate=new Date();
       user.rechargeWallet = Number(user.rechargeWallet) + Number(amount);
-      user.totalInvestment += Number(amount);
+      user.totalInvestment += Number(amount); + Number(deductbnbKombat)
       user.bnbKombat -=deductbnbKombat
       // user.bnbKombat += Number(10);
       await user.save();
