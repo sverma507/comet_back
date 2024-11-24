@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   walletAddress: { type: String, required:true},
   rechargeWallet: { type: Number, default: 0 },
   totalInvestment: { type: Number, default: 0 },
+  totalWithdrawl: { type: Number, default: 0 },
   earningWallet: { type: Number, default: 0 },
   isActive: { type: Boolean, default: false },
   teamBusiness:{type:Number, default: 0},

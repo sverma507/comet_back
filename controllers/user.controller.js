@@ -3,6 +3,9 @@ import { LevelIncome } from "../models/levelIncome.js";
 import { User } from "../models/user.model.js";
 import { UserRecharge } from "../models/userRecharge.model.js";
 import jwt from 'jsonwebtoken'
+import { WithdrawlWallet } from "../models/withdrawl.js";
+import { UplineIncome } from "../models/uplineIncome.js";
+import { GlobalIncome } from "../models/globalIncome.js";
 export const InvesterSignUp = async (req, res) => {
     const {referredBy, walletAddress } = req.body;
     const gift = 10
@@ -494,3 +497,106 @@ export const InvesterSignUp = async (req, res) => {
   
     return [];
   };
+
+
+
+
+
+
+
+  export const withdrawlWallet = async(req,res) => {
+    try {
+      const { userId,amount } = req.params;
+      console.log(userId, amount);
+
+      const user = await User.findById(userId);
+
+      if (!user.isActive) {
+        return res.status(400).json({ message: "Please activate you account first!" });
+      }else if(amount < 50){
+        return res.status(400).json({ message: "Minimum withdrawl is $50!" });
+      } else if(user.earningWallet < amount){
+        return res.status(400).json({ message: "Insufficient balance!" });
+      }
+      
+      user.earningWallet -= Number(amount);
+      user.totalWithdrawl += Number(amount);
+      await user.save();
+      // console.log('user',user);
+
+      const newWithdrawl = new WithdrawlWallet({
+        userId: user.referralCode,
+        walletAddress : user.walletAddress,
+        amount,
+        status:'Pending'
+      })
+
+      await newWithdrawl.save(); 
+
+      res.status(200).json({
+        success: true,
+        message: 'Withdrawl request  successfully created.',
+        data: user,
+      });
+      
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Server error during withdrawl.' });
+    }
+}
+
+
+export const getWithdrawlUplineHistory = async(req,res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    const history = await UplineIncome.find({userId:user._id}).sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
+
+
+
+
+
+export const getGlobalIncomeHistory = async(req,res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    const history = await GlobalIncome.find({userId:user._id}).sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
+
+
+
+
+export const getUserWithdrawlHistory = async(req,res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    const history = await WithdrawlWallet.find({userId:user.referralCode}).sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      message: 'History fetched.',
+      data: history,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error during fetching history.' });
+  }
+}
